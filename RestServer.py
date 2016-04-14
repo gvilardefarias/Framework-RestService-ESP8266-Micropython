@@ -56,7 +56,7 @@ class Server():
 		return self.cli.read(1024)
 
 	def send(self, data):
-		self.cli.sendall(data.encode())
+		self.cli.send(data.encode())
 
 	def close(self):
 		self.cli.close()
