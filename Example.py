@@ -14,7 +14,7 @@ def b():
 	return response.build()
 
 paths = {"/a":a,
-		 "/b":b}
+	 "/b":b}
 
 server = RestServer.Server(8080)
 server.start(paths)
