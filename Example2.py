@@ -13,7 +13,7 @@ def open():
 	return response.build()
 def close():
 	p.low()
-	response = Response()
+	response = RestServer.Response()
 	response.code(200)
 	response.contentType("text/plain")
 	response.data("Fechado")
@@ -25,7 +25,7 @@ paths = {"/open":open,
 p.high()
 wlan = network.WLAN(network.STA_IF)
 wlan.active(True)
-wlan.connect('essid', 'passworld')
+wlan.connect('Vilar', 'defarias')
 
 while not wlan.isconnected():
 	pass
