@@ -1,3 +1,4 @@
+import RestServer
 import network
 from machine import Pin
 
@@ -5,7 +6,7 @@ p = Pin(0, Pin.OUT)
 
 def open():
 	p.high()
-	response = Response()
+	response = RestServer.Response()
 	response.code(200)
 	response.contentType("text/plain")
 	response.data("Aberto")
@@ -31,5 +32,6 @@ while not wlan.isconnected():
 	
 p.low()
 
-server = Server(8000)
+server = RestServer.Server(8000)
+server.auth("YTpi")
 server.start(paths)
