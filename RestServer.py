@@ -11,6 +11,7 @@ class Response:
 
 		self.codes = {
 			200:'ok',
+			401:'unauthorized',
 			404:'not_found'
 		}
 
@@ -24,12 +25,19 @@ class Response:
 		self.dat = d
 		self.contentLength = len(d.encode())
 
+	def notAuthorized(self):
+		self.code = 401
+		self.authorized = False
+
 	def build(self):
 		response = ""
 		response += "HTTP/1.1 " + str(self.code) + " " + self.codes[self.code] + "\r\n"
 		response += "Date: Mon, 27 Jul 2015 12:28:53 GMT\r\n"
 		response += "Server: Simple-Python-HTTP-Server\r\n"
 		response += "Last-Modified: Wed, 22 Jul 2015 19:15:56 GMT\r\n"
+
+		if not self.authorized:
+			response += "WWW-Authenticate: Basic realm=\"WallyWorld\"\r\n"
 
 		if self.dat!=None:			
 			response += "Content-Length: " + str(self.contentLength) + "\r\n"
@@ -81,7 +89,7 @@ class Server():
 				path = self.getPath(received)
 
 				try:
-					retur = paths[path]()
+					retur = paths[path](received)
 				except:
 					response = Response()
 					response.code(404)
@@ -93,6 +101,29 @@ class Server():
 		except:
 			self.srv.close()
 			return "Fail"
+
+def getAuth(self, response):
+	ind = 0
+	find = False
+	aux = response.decode()
+	aux = response.split()
+
+	for i in aux:
+		if i=="Authorization:":
+			find = True
+			break
+		ind += 1
+
+	if not find:
+		return False
+
+	return aux[ind+2]
+
+def getCode(self, response):
+	aux = response.decode()
+	aux = response.split()
+
+	return aux[1]
 
 def POST(data, path, host, porta):
 	requisicao = "POST " + path + " HTTP/1.0" + "\r\n" + "Host: " + host + "\r\n" + "User-Agent: ESP" + "\r\n" + "Accept: application/json" + "\r\n" + "If-modified-since: Sat, 29 Oct 1999 19:43:31 GMT" + "\r\n" + "Content-Type: application/json" + "\r\n" + "Content-Length: " + str(len(data)) + "\r\n" + "Connection: keep-alive" + "\r\n" + "\r\n" + data
